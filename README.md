@@ -10,8 +10,6 @@ I'm using a combination of a 24V (car batteries) and a 48V (lifepo4) storage:
 
 In addition I'm running a few more inverters directly "decreasing" my home consumption value. They are not relevant for this solution, but it's good to know that this is possible.
 
-If you just have one stage, simply leave stage 2 empty.
-
 ### Dockerhub
 https://hub.docker.com/repository/docker/robertdiers/xxx
 
