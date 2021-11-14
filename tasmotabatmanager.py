@@ -138,6 +138,11 @@ if __name__ == "__main__":
         
         #charging
         chargestatus = StatusTasmota(tasmota_charge_ip)
+        if 'ON' in chargestatus:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " chargestatus: ", 'ON')
+        if 'OFF' in chargestatus:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " chargestatus: ", 'OFF')
+
         if 'OFF' in chargestatus and surplus > int(tasmota_charge_start):
             SwitchTasmota(tasmota_charge_ip, 'ON')
             print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " start charging: ", surplus)
@@ -148,6 +153,15 @@ if __name__ == "__main__":
         #feed-in stages
         stage1status = StatusTasmota(tasmota_stage1_ip)
         stage2status = StatusTasmota(tasmota_stage2_ip)
+        if 'ON' in stage1status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'ON')
+        if 'OFF' in stage1status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'OFF')
+        if 'ON' in stage2status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'ON')
+        if 'OFF' in stage2status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'OFF')
+
         if surplus < 0:
             #enable
             if 'OFF' in stage1status and surplus < int(tasmota_stage1_start):
