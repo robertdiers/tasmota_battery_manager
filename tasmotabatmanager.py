@@ -11,7 +11,7 @@ from pymodbus.payload import BinaryPayloadBuilder
 from urllib.request import urlopen
 
 #read config
-config = configparser.ConfigParser()
+config = configparser.SafeConfigParser()
 
 #-----------------------------------------
 # Routine to read a float    
@@ -30,27 +30,35 @@ def WriteFloat(client,myadr_dec,feed_in,unitid):
 
 # read status from Tasmota
 def StatusTasmota(tasmotaip):
-    statuslink = urlopen('http://'+tasmotaip+'/?m=1')
-    return statuslink.read().decode('utf-8')
+    if not tasmotaip:
+        return 'DISABLED'
+    try:
+        statuslink = urlopen('http://'+tasmotaip+'/?m=1')
+        return statuslink.read().decode('utf-8')
+    except Exception as e:
+        print (e)
+        return 'ERROR'
 
 # set status Tasmota
 def SwitchTasmota(tasmotaip, status):
-    if 'ON' in status and 'OFF' in StatusTasmota(tasmotaip):
-        switchlink = urlopen('http://'+tasmotaip+'/?m=1&o=1')
-        retval = switchlink.read().decode('utf-8')
-        print(datetime.now().strftime("%d/%m/%Y %H:%M:%S") + ' ' + tasmotaip + ': ' + retval)
-        return 1
-    if 'OFF' in status and 'ON' in StatusTasmota(tasmotaip):
-        switchlink = urlopen('http://'+tasmotaip+'/?m=1&o=1')
-        retval = switchlink.read().decode('utf-8')
-        print(datetime.now().strftime("%d/%m/%Y %H:%M:%S") + ' ' + tasmotaip + ': ' + retval)
-        return 1
-    return 0
+    print (tasmotaip+' '+status)
+    try:
+        if 'ON' in status and 'OFF' in StatusTasmota(tasmotaip):
+            switchlink = urlopen('http://'+tasmotaip+'/?m=1&o=1')
+            retval = switchlink.read().decode('utf-8')
+            print(datetime.now().strftime("%d/%m/%Y %H:%M:%S") + ' ' + tasmotaip + ': ' + retval)
+        if 'OFF' in status and 'ON' in StatusTasmota(tasmotaip):
+            switchlink = urlopen('http://'+tasmotaip+'/?m=1&o=1')
+            retval = switchlink.read().decode('utf-8')
+            print(datetime.now().strftime("%d/%m/%Y %H:%M:%S") + ' ' + tasmotaip + ': ' + retval)
+    except Exception as e:
+        print (e)
 
 if __name__ == "__main__":  
     print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " START #####")
     try:
         #read config
+        config.read('tasmotabatmanagerdefaults.ini')
         config.read('tasmotabatmanager.ini')
 
         #read config and default values
@@ -153,14 +161,8 @@ if __name__ == "__main__":
         #feed-in stages
         stage1status = StatusTasmota(tasmota_stage1_ip)
         stage2status = StatusTasmota(tasmota_stage2_ip)
-        if 'ON' in stage1status:
-            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'ON')
-        if 'OFF' in stage1status:
-            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'OFF')
-        if 'ON' in stage2status:
-            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'ON')
-        if 'OFF' in stage2status:
-            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'OFF')
+        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", stage1status)
+        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", stage2status)
 
         if surplus < 0:
             #enable
@@ -175,7 +177,7 @@ if __name__ == "__main__":
             if 'ON' in stage2status and surplus > int(tasmota_stage2_end):
                 SwitchTasmota(tasmota_stage2_ip, 'OFF')
                 print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " end feed-in stage2: ", surplus)
-            if 'OFF' in stage2status and 'ON' in stage1status and surplus > int(tasmota_stage1_end):
+            if ('OFF' in stage2status or 'DISABLED' in stage2status or 'ERROR' in stage2status) and 'ON' in stage1status and surplus > int(tasmota_stage1_end):
                 SwitchTasmota(tasmota_stage1_ip, 'OFF')
                 print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " end feed-in stage1: ", surplus)
         
