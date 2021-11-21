@@ -151,12 +151,19 @@ if __name__ == "__main__":
         if 'OFF' in chargestatus:
             print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " chargestatus: ", 'OFF')
 
-        if 'OFF' in chargestatus and surplus > int(tasmota_charge_start):
-            SwitchTasmota(tasmota_charge_ip, 'ON')
-            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " start charging: ", surplus)
-        if 'ON' in chargestatus and surplus < int(tasmota_charge_end):
-            SwitchTasmota(tasmota_charge_ip, 'OFF')
-            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stop charging: ", surplus)
+        #we will always charge between 12:00 and 12:05 to ensure a kind of "battery protect"
+        now = datetime.now()
+        if now.hour == 12 and now.minute < 5:
+            if 'OFF' in chargestatus:
+                SwitchTasmota(tasmota_charge_ip, 'ON')
+                print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " start charging battery protect: ", surplus)
+        else:
+            if 'OFF' in chargestatus and surplus > int(tasmota_charge_start):
+                SwitchTasmota(tasmota_charge_ip, 'ON')
+                print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " start charging: ", surplus)
+            if 'ON' in chargestatus and surplus < int(tasmota_charge_end):
+                SwitchTasmota(tasmota_charge_ip, 'OFF')
+                print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stop charging: ", surplus)
 
         #feed-in stages
         stage1status = StatusTasmota(tasmota_stage1_ip)
