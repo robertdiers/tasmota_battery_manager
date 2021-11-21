@@ -11,7 +11,7 @@ from pymodbus.payload import BinaryPayloadBuilder
 from urllib.request import urlopen
 
 #read config
-config = configparser.SafeConfigParser()
+config = configparser.ConfigParser()
 
 #-----------------------------------------
 # Routine to read a float    
