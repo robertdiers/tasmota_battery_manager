@@ -8,6 +8,7 @@ RUN pip3 install configparser pymodbus
 # copy files
 COPY tasmotabatmanager.py /app/tasmotabatmanager.py
 COPY tasmotabatmanager.ini /app/tasmotabatmanager.ini
+COPY tasmotabatmanager.ini /app/tasmotabatmanagerdefaults.ini
 COPY tasmotabatmanager.sh /app/tasmotabatmanager.sh
 COPY entrypoint.sh /app/entrypoint.sh
 COPY container_cron /etc/cron.d/container_cron
