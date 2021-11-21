@@ -181,10 +181,10 @@ if __name__ == "__main__":
                 print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " start feed-in stage2: ", surplus)
         else:
             #disable
-            if 'ON' in stage2status and surplus > int(tasmota_stage2_end):
+            if 'ON' in stage2status and (-consumption_total) > int(tasmota_stage2_end):
                 SwitchTasmota(tasmota_stage2_ip, 'OFF')
                 print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " end feed-in stage2: ", surplus)
-            if ('OFF' in stage2status or 'DISABLED' in stage2status or 'ERROR' in stage2status) and 'ON' in stage1status and surplus > int(tasmota_stage1_end):
+            if ('OFF' in stage2status or 'DISABLED' in stage2status or 'ERROR' in stage2status) and 'ON' in stage1status and (-consumption_total) > int(tasmota_stage1_end):
                 SwitchTasmota(tasmota_stage1_ip, 'OFF')
                 print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " end feed-in stage1: ", surplus)
         
