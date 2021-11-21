@@ -15,3 +15,6 @@ https://hub.docker.com/repository/docker/robertdiers/tasmotabatmanager
 
 ### Development
 Please start Visual Studio Code Server using script vsc_start.sh, open http://localhost:8080 to code.
+
+### Blog
+https://robertdiers.medium.com/diy-battery-manager-using-tasamota-powered-sonoff-devices-36f3f4fbd2f1
