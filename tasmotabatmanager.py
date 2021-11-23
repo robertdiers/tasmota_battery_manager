@@ -168,8 +168,22 @@ if __name__ == "__main__":
         #feed-in stages
         stage1status = StatusTasmota(tasmota_stage1_ip)
         stage2status = StatusTasmota(tasmota_stage2_ip)
-        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", stage1status)
-        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", stage2status)
+        if 'ON' in stage1status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'ON')
+        if 'OFF' in stage1status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'OFF')
+        if 'ERROR' in stage1status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'ERROR')
+        if 'DISABLED' in stage1status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'DISABLED')
+        if 'ON' in stage2status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'ON')
+        if 'OFF' in stage2status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'OFF')
+        if 'ERROR' in stage2status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'ERROR')
+        if 'DISABLED' in stage2status:
+            print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'DISABLED')
 
         if surplus < 0:
             #enable
