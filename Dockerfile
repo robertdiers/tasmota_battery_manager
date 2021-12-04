@@ -3,7 +3,7 @@ FROM debian:stable-slim
 RUN apt update
 RUN apt -y upgrade
 RUN apt -y install cron python3 python3-pip
-RUN pip3 install configparser pymodbus
+RUN pip3 install configparser pymodbus graphyte
 
 # copy files
 COPY tasmotabatmanager.py /app/tasmotabatmanager.py

@@ -10,6 +10,8 @@ I'm using a combination of a 24V (car batteries) and a 48V (li-ion) storage:
 
 In addition I'm running a few more inverters directly "decreasing" my home consumption value. They are not relevant for this solution, but it's good to know that this is possible.
 
+Graphite usage is optional (metrics)
+
 ### Dockerhub
 https://hub.docker.com/repository/docker/robertdiers/tasmotabatmanager
 
