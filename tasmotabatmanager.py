@@ -150,12 +150,25 @@ if __name__ == "__main__":
         consumption_total = consumptionbat + consumptiongrid + consumptionpv
         print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " consumption: ", consumption_total)
         
-        inverter = ReadFloat(inverterclient,172,71)
-        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " inverter: ", inverter)         
+        #inverter = ReadFloat(inverterclient,172,71)
+        #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " inverter: ", inverter)    
+        dc1 = ReadFloat(inverterclient,260,71)
+        #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " dc1: ", dc1)
+        WriteGraphite(graphite_ip, 'solar.kostal.generation.dc1', dc1)
+        dc2 = ReadFloat(inverterclient,270,71)
+        #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " dc2: ", dc2)
+        WriteGraphite(graphite_ip, 'solar.kostal.generation.dc2', dc2)
+        dc3 = ReadFloat(inverterclient,280,71)
+        #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " dc3: ", dc3)
+        WriteGraphite(graphite_ip, 'solar.kostal.generation.dc3', dc3)
+        generation = round(dc1+dc2+dc3,2)
+        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " generation: ", generation) 
+        WriteGraphite(graphite_ip, 'solar.kostal.generation.total', generation)
         
         #this is not exact, but enough for us
-        surplus = round(inverter - consumption_total,1)
+        surplus = round(generation - consumption_total,1)
         print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " surplus: ", surplus)
+        WriteGraphite(graphite_ip, 'solar.kostal.generation.surplus', surplus)
         
         inverterclient.close()
         
@@ -196,10 +209,10 @@ if __name__ == "__main__":
             WriteGraphite(graphite_ip, 'solar.garden.stage1status', 0)
         if 'ERROR' in stage1status:
             print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'ERROR')
-            WriteGraphite(graphite_ip, 'solar.garden.stage1status', 2)
+            WriteGraphite(graphite_ip, 'solar.garden.stage1status', -2)
         if 'DISABLED' in stage1status:
             print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage1status: ", 'DISABLED')
-            WriteGraphite(graphite_ip, 'solar.garden.stage1status', 3)
+            WriteGraphite(graphite_ip, 'solar.garden.stage1status', -1)
         if 'ON' in stage2status:
             print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'ON')
             WriteGraphite(graphite_ip, 'solar.garden.stage2status', 1)
@@ -208,10 +221,10 @@ if __name__ == "__main__":
             WriteGraphite(graphite_ip, 'solar.garden.stage2status', 0)
         if 'ERROR' in stage2status:
             print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'ERROR')
-            WriteGraphite(graphite_ip, 'solar.garden.stage2status', 3)
+            WriteGraphite(graphite_ip, 'solar.garden.stage2status', -2)
         if 'DISABLED' in stage2status:
             print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " stage2status: ", 'DISABLED')
-            WriteGraphite(graphite_ip, 'solar.garden.stage2status', 4)
+            WriteGraphite(graphite_ip, 'solar.garden.stage2status', -1)
 
         if surplus < 0:
             #enable
