@@ -143,15 +143,23 @@ if __name__ == "__main__":
         #all additional invertes will decrease my home consumption, so it might be negative - this is fine
         consumptionbat = ReadFloat(inverterclient,106,71)
         #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " consumption battery: ", consumptionbat)
+        WriteGraphite(graphite_ip, 'solar.kostal.consumption.battery', consumptionbat)
         consumptiongrid = ReadFloat(inverterclient,108,71)
         #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " consumption grid: ", consumptiongrid)
+        WriteGraphite(graphite_ip, 'solar.kostal.consumption.grid', consumptiongrid)
         consumptionpv = ReadFloat(inverterclient,116,71)
         #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " consumption pv: ", consumptionpv)
+        WriteGraphite(graphite_ip, 'solar.kostal.consumption.pv', consumptionpv)
         consumption_total = consumptionbat + consumptiongrid + consumptionpv
         print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " consumption: ", consumption_total)
+        WriteGraphite(graphite_ip, 'solar.kostal.consumption.total', consumption_total)
         
-        #inverter = ReadFloat(inverterclient,172,71)
-        #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " inverter: ", inverter)    
+        #inverter output to my home grid
+        inverter = ReadFloat(inverterclient,172,71)
+        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " inverter: ", inverter)   
+        WriteGraphite(graphite_ip, 'solar.kostal.inverter', inverter)  
+        
+        #Kostal generation (by tracker/battery)
         dc1 = ReadFloat(inverterclient,260,71)
         #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " dc1: ", dc1)
         WriteGraphite(graphite_ip, 'solar.kostal.generation.dc1', dc1)
