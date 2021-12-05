@@ -168,7 +168,7 @@ if __name__ == "__main__":
         #this is not exact, but enough for us
         surplus = round(generation - consumption_total,1)
         print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " surplus: ", surplus)
-        WriteGraphite(graphite_ip, 'solar.kostal.generation.surplus', surplus)
+        WriteGraphite(graphite_ip, 'solar.kostal.surplus', surplus)
         
         inverterclient.close()
         
