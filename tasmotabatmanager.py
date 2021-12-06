@@ -154,11 +154,6 @@ if __name__ == "__main__":
         print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " consumption: ", consumption_total)
         WriteGraphite(graphite_ip, 'solar.kostal.consumption.total', consumption_total)
         
-        #inverter output to my home grid
-        inverter = ReadFloat(inverterclient,172,71)
-        print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " inverter: ", inverter)   
-        WriteGraphite(graphite_ip, 'solar.kostal.inverter', inverter)  
-        
         #Kostal generation (by tracker/battery)
         dc1 = ReadFloat(inverterclient,260,71)
         #print (datetime.now().strftime("%d/%m/%Y %H:%M:%S") + " dc1: ", dc1)
